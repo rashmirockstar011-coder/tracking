@@ -12,31 +12,9 @@ const USERS = [
 export default function LoginPage() {
     const router = useRouter();
     const [selectedUser, setSelectedUser] = useState('');
-    const [pin, setPin] = useState(['', '', '', '']);
+    const [pin, setPin] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-
-    const handlePinChange = (index, value) => {
-        if (!/^\d*$/.test(value)) return;
-
-        const newPin = [...pin];
-        newPin[index] = value.slice(-1);
-        setPin(newPin);
-        setError('');
-
-        // Auto-focus next input
-        if (value && index < 3) {
-            const nextInput = document.getElementById(`pin-${index + 1}`);
-            nextInput?.focus();
-        }
-    };
-
-    const handleKeyDown = (index, e) => {
-        if (e.key === 'Backspace' && !pin[index] && index > 0) {
-            const prevInput = document.getElementById(`pin-${index - 1}`);
-            prevInput?.focus();
-        }
-    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -46,9 +24,8 @@ export default function LoginPage() {
             return;
         }
 
-        const pinCode = pin.join('');
-        if (pinCode.length !== 4) {
-            setError('Please enter your 4-digit PIN 🔐');
+        if (!pin) {
+            setError('Please enter your PIN 🔐');
             return;
         }
 
@@ -59,7 +36,7 @@ export default function LoginPage() {
             const res = await fetch('/api/auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: selectedUser, pin: pinCode })
+                body: JSON.stringify({ userId: selectedUser, pin })
             });
 
             const data = await res.json();
@@ -68,8 +45,7 @@ export default function LoginPage() {
                 router.push('/dashboard');
             } else {
                 setError(data.error || 'Wrong PIN, try again! 💔');
-                setPin(['', '', '', '']);
-                document.getElementById('pin-0')?.focus();
+                setPin('');
             }
         } catch (err) {
             setError('Something went wrong, please try again 🥺');
@@ -113,22 +89,16 @@ export default function LoginPage() {
                     {/* PIN Input */}
                     <div className={styles.pinSection}>
                         <label className="input-label">Enter your PIN</label>
-                        <div className="pin-input">
-                            {pin.map((digit, index) => (
-                                <input
-                                    key={index}
-                                    id={`pin-${index}`}
-                                    type="password"
-                                    inputMode="numeric"
-                                    maxLength={1}
-                                    value={digit}
-                                    onChange={(e) => handlePinChange(index, e.target.value)}
-                                    onKeyDown={(e) => handleKeyDown(index, e)}
-                                    className="pin-digit"
-                                    disabled={loading}
-                                />
-                            ))}
-                        </div>
+                        <input
+                            type="password"
+                            inputMode="numeric"
+                            className="input"
+                            placeholder="Enter your secret PIN..."
+                            value={pin}
+                            onChange={(e) => { setPin(e.target.value); setError(''); }}
+                            disabled={loading}
+                            autoComplete="current-password"
+                        />
                     </div>
 
                     {/* Error Message */}
