@@ -1,0 +1,250 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--pink-100);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.headerContent {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--pink-500);
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.greeting {
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.main {
+    flex: 1;
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: var(--space-md);
+    padding-bottom: 6rem;
+    width: 100%;
+}
+
+/* Dashboard Home */
+.welcome {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.welcomeTitle {
+    font-size: 1.75rem;
+    margin-bottom: var(--space-xs);
+}
+
+.welcomeSubtitle {
+    color: var(--gray-500);
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.statCard {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+}
+
+.statIcon {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+}
+
+.statValue {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--pink-500);
+}
+
+.statLabel {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.navGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+}
+
+.navCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-xl);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--gray-700);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.navCard:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.navCardIcon {
+    font-size: 2.5rem;
+}
+
+.navCardTitle {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.navCardDesc {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    text-align: center;
+}
+
+/* Page Styles */
+.pageContainer {
+    padding-bottom: var(--space-xl);
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+}
+
+.pageTitle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 1.5rem;
+}
+
+/* Filter Tabs */
+.filterTabs {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    overflow-x: auto;
+    padding-bottom: var(--space-xs);
+}
+
+.filterTab {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--white);
+    border: 1px solid var(--pink-200);
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all var(--transition-fast);
+}
+
+.filterTab:hover {
+    border-color: var(--pink-400);
+}
+
+.filterTab.active {
+    background: var(--gradient-primary);
+    color: var(--white);
+    border-color: transparent;
+}
+
+/* List Styles */
+.itemList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.listItem {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-fast);
+}
+
+.listItem:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.listItemIcon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.listItemContent {
+    flex: 1;
+    min-width: 0;
+}
+
+.listItemTitle {
+    font-weight: 600;
+    margin-bottom: var(--space-xs);
+}
+
+.listItemMeta {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    display: flex;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+}
+
+.listItemActions {
+    display: flex;
+    gap: var(--space-xs);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .statsGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .navGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
