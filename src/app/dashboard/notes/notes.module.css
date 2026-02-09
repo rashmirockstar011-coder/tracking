@@ -124,6 +124,7 @@
     margin-bottom: var(--space-sm);
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: 1.5;
@@ -295,6 +296,23 @@
 .dayCell.today .dayNumber {
     color: var(--pink-500);
     font-weight: 700;
+}
+
+.dayCell.selected {
+    background: var(--pink-500) !important;
+    box-shadow: 0 4px 10px rgba(236, 72, 153, 0.4);
+    transform: scale(1.05);
+    z-index: 1;
+}
+
+.dayCell.selected .dayNumber {
+    color: white !important;
+}
+
+.dayCell.selected .noteIndicator,
+.dayCell.selected .multiDot {
+    background: white !important;
+    box-shadow: none;
 }
 
 .dayCell.hasNotes {
@@ -771,26 +789,243 @@
     }
 }
 
-/* ===== EMPTY STATE ===== */
-.emptyState {
-    text-align: center;
-    padding: var(--space-2xl);
-    color: var(--gray-400);
+/* ===== DAILY NOTE LIST ===== */
+.dailyListContainer {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    margin-top: var(--space-lg);
+    box-shadow: var(--shadow-md);
+    animation: slideUp var(--transition-normal);
 }
 
-.emptyIcon {
-    font-size: 4rem;
+.dailyHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: var(--space-md);
-    opacity: 0.5;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--pink-100);
 }
 
-.emptyText {
+.dailyDate {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-800);
+}
+
+.dailyCount {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    background: var(--pink-50);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.dailyItems {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.dailyItem {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--white);
+    border: 1px solid var(--gray-100);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+}
+
+.dailyItem:hover {
+    border-color: var(--pink-200);
+    transform: translateX(2px);
+}
+
+.dailyItem.completed {
+    opacity: 0.6;
+    text-decoration: line-through;
+    background: var(--gray-50);
+}
+
+.itemCheck {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid var(--pink-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: white;
+    color: var(--pink-500);
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+}
+
+.dailyItem.completed .itemCheck {
+    background: var(--pink-100);
+    border-color: var(--pink-300);
+}
+
+.textDot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pink-300);
+}
+
+.itemContent {
+    flex: 1;
     font-size: 1rem;
-    margin-bottom: var(--space-md);
+    color: var(--gray-700);
 }
 
-.emptySubtext {
-    font-size: 0.875rem;
+.itemDelete {
+    opacity: 0;
     color: var(--gray-400);
-    font-style: italic;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+}
+
+.dailyItem:hover .itemDelete {
+    opacity: 1;
+}
+
+.itemDelete:hover {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.dailyEmpty {
+    text-align: center;
+    padding: var(--space-xl);
+    color: var(--gray-400);
+    background: var(--pink-50);
+    border-radius: var(--radius-lg);
+    border: 1px dashed var(--pink-200);
+}
+
+.addFirstBtn {
+    margin-top: var(--space-sm);
+    color: var(--pink-500);
+    font-weight: 600;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Add Item Form */
+.addItemBtn {
+    width: 100%;
+    padding: var(--space-sm);
+    border: 2px dashed var(--pink-200);
+    border-radius: var(--radius-lg);
+    background: white;
+    color: var(--pink-500);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    transition: all var(--transition-fast);
+}
+
+.addItemBtn:hover {
+    border-color: var(--pink-400);
+    background: var(--pink-50);
+}
+
+.addItemForm {
+    background: var(--gray-50);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+}
+
+.typeToggle {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.typeBtn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    border: 1px solid var(--gray-300);
+    background: white;
+    color: var(--gray-500);
+    cursor: pointer;
+}
+
+.typeBtn.active {
+    background: var(--pink-500);
+    color: white;
+    border-color: var(--pink-500);
+}
+
+.addItemInput {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
+    outline: none;
+}
+
+.addItemInput:focus {
+    border-color: var(--pink-400);
+    box-shadow: 0 0 0 2px rgba(244, 114, 182, 0.2);
+}
+
+.addItemActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+}
+
+.cancelBtn {
+    padding: 6px 12px;
+    border: none;
+    background: none;
+    color: var(--gray-500);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.saveBtn {
+    padding: 6px 16px;
+    background: var(--pink-500);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+    .dailyListContainer {
+        margin-top: var(--space-md);
+        padding: var(--space-md);
+        border-radius: var(--radius-lg);
+    }
+
+    .itemDelete {
+        opacity: 1;
+        /* Always show delete on mobile */
+    }
 }

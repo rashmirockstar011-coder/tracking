@@ -10,6 +10,7 @@ import NotesList from './components/NotesList';
 import CalendarGrid from './components/CalendarGrid';
 import NoteViewer from './components/NoteViewer';
 import CreateNoteModal from './components/CreateNoteModal';
+import DailyNoteList from './components/DailyNoteList';
 
 export default function NotesPage() {
     // Mode state: 'notes' (default) or 'rewind'
@@ -24,8 +25,9 @@ export default function NotesPage() {
     const [filterTag, setFilterTag] = useState('all');
 
     // Rewind Mode state
-    const [viewerNotes, setViewerNotes] = useState(null);
-    const [viewerDateKey, setViewerDateKey] = useState(null);
+    // Set default selected date to today YYYY-MM-DD
+    const todayStr = new Date().toISOString().split('T')[0];
+    const [selectedDate, setSelectedDate] = useState(todayStr);
 
     // Modal state
     const [showCreateModal, setShowCreateModal] = useState(false);
@@ -72,6 +74,26 @@ export default function NotesPage() {
         }
     };
 
+    // Quick add note for daily list
+    const handleAddDailyItem = async (itemData) => {
+        // itemData = { content, type, date, completed }
+        await handleSaveNote(itemData);
+    };
+
+    // Toggle completion for daily list
+    const handleToggleComplete = async (id, completed) => {
+        try {
+            await fetch(`/api/notes/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed })
+            });
+            fetchNotes(); // Refresh to show update
+        } catch (error) {
+            console.error('Failed to update note:', error);
+        }
+    };
+
     // Delete note
     const handleDeleteNote = async (id) => {
         if (!confirm('Delete this memory?')) return;
@@ -89,103 +111,105 @@ export default function NotesPage() {
         setShowCreateModal(true);
     };
 
-    // Open notes in viewer (Rewind Mode)
-    const handleDateClick = (dayNotes, dateKey) => {
-        setViewerNotes(dayNotes);
-        setViewerDateKey(dateKey);
+    // Handle date selection in Rewind Mode
+    const handleDateSelect = (dateKey) => {
+        setSelectedDate(dateKey);
     };
 
-    // Close viewer
-    const closeViewer = () => {
-        setViewerNotes(null);
-        setViewerDateKey(null);
-    };
-
-    // Open create modal
-    const openCreateModal = () => {
-        setEditingNote(null);
-        setShowCreateModal(true);
-    };
+    // Filter notes for selected date in Rewind mode
+    const selectedDateNotes = notes.filter(note => {
+        if (!note.createdAt) return false;
+        const noteDate = new Date(note.createdAt).toISOString().split('T')[0];
+        return noteDate === selectedDate;
+    });
 
     return (
         <div className={styles.pageContainer}>
             {/* Header */}
             <div className={styles.pageHeader}>
-                <h1 className={styles.pageTitle}>
-                    {mode === 'notes' ? '📝 Notes' : '🔮 Rewind'}
-                </h1>
-                {mode === 'notes' && (
-                    <button className="btn btn-primary" onClick={openCreateModal}>
-                        + New Note
-                    </button>
+                <h1 className={styles.pageTitle}>Notes & Memories 📝</h1>
+                <ModeToggle mode={mode} setMode={setMode} />
+            </div>
+
+            <div className={styles.mainContent}>
+                {mode === 'notes' ? (
+                    <>
+                        {/* Search & Filter */}
+                        <div className={styles.searchBar}>
+                            <div className={styles.searchWrapper}>
+                                <span className={styles.searchIcon}>🔍</span>
+                                <input
+                                    type="text"
+                                    className={styles.searchInput}
+                                    placeholder="Search memories..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Filter Tags */}
+                        <div className={styles.filterBar}>
+                            {['all', 'memory', 'idea', 'todo', 'dream'].map(tag => (
+                                <button
+                                    key={tag}
+                                    className={`${styles.filterBtn} ${filterTag === tag ? styles.active : ''}`}
+                                    onClick={() => setFilterTag(tag)}
+                                >
+                                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Notes List */}
+                        <NotesList
+                            notes={notes}
+                            loading={loading}
+                            searchQuery={searchQuery}
+                            filterTag={filterTag}
+                            onNoteClick={handleNoteClick}
+                            onDeleteNote={handleDeleteNote}
+                        />
+
+                        {/* Floating Add Button */}
+                        <button
+                            className="btn-floating"
+                            onClick={() => {
+                                setEditingNote(null);
+                                setShowCreateModal(true);
+                            }}
+                        >
+                            +
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        {/* Rewind Mode: Calendar + Daily List */}
+                        <div className={styles.rewindContainer}>
+                            <CalendarGrid
+                                notes={notes}
+                                onDateClick={handleDateSelect}
+                                selectedDate={selectedDate}
+                            />
+
+                            <DailyNoteList
+                                date={selectedDate}
+                                notes={selectedDateNotes}
+                                onAddNote={handleAddDailyItem}
+                                onDeleteNote={handleDeleteNote}
+                                onToggleComplete={handleToggleComplete}
+                            />
+                        </div>
+                    </>
                 )}
             </div>
 
-            {/* Mode Toggle */}
-            <div style={{ marginBottom: 'var(--space-lg)', display: 'flex', justifyContent: 'center' }}>
-                <ModeToggle mode={mode} onModeChange={setMode} />
-            </div>
-
-            {/* Main Content */}
-            {loading ? (
-                <div className="empty-state">
-                    <div className="empty-state-icon">💫</div>
-                    <p>Loading memories...</p>
-                </div>
-            ) : (
-                <>
-                    {/* Notes Mode */}
-                    {mode === 'notes' && (
-                        <NotesList
-                            notes={notes}
-                            onNoteClick={handleNoteClick}
-                            onDeleteNote={handleDeleteNote}
-                            searchQuery={searchQuery}
-                            onSearchChange={setSearchQuery}
-                            filterTag={filterTag}
-                            onFilterChange={setFilterTag}
-                        />
-                    )}
-
-                    {/* Rewind Mode */}
-                    {mode === 'rewind' && (
-                        <CalendarGrid
-                            notes={notes}
-                            onDateClick={handleDateClick}
-                        />
-                    )}
-                </>
-            )}
-
-            {/* Floating Action Button (Notes Mode only) */}
-            {mode === 'notes' && (
-                <button
-                    className="fab"
-                    onClick={openCreateModal}
-                    title="New Note"
-                >
-                    ✏️
-                </button>
-            )}
-
-            {/* Create/Edit Modal */}
+            {/* Create Note Modal (Shared) */}
             {showCreateModal && (
                 <CreateNoteModal
-                    editingNote={editingNote}
-                    onClose={() => {
-                        setShowCreateModal(false);
-                        setEditingNote(null);
-                    }}
+                    onClose={() => setShowCreateModal(false)}
                     onSave={handleSaveNote}
-                />
-            )}
-
-            {/* Note Viewer (Rewind Mode) */}
-            {viewerNotes && (
-                <NoteViewer
-                    notes={viewerNotes}
-                    dateKey={viewerDateKey}
-                    onClose={closeViewer}
+                    initialData={editingNote}
                 />
             )}
         </div>
