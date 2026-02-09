@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styles from '../dashboard.module.css';
 import creditStyles from './credits.module.css';
+import TugOfWar from './TugOfWar';
 
 const COLUMNS = [
     { id: 'owed-to-me', title: '💝 Owed to Me' },
@@ -102,6 +103,9 @@ export default function CreditsPage() {
                     + New Credit
                 </button>
             </div>
+
+            {/* Tug of War Balance Visualization */}
+            {!loading && <TugOfWar credits={credits} />}
 
             {/* Kanban Board */}
             {loading ? (

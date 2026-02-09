@@ -1,1 +1,266 @@
-/* Additional styles for credits page if needed */
+/* Credits Page - Tug of War Visualization */
+
+/* Tug of War Container */
+.tugOfWar {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.tugOfWarTitle {
+    text-align: center;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--gray-500);
+    margin-bottom: var(--space-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Players Row */
+.playersRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    transition: transform var(--transition-spring);
+}
+
+.player:hover {
+    transform: scale(1.05);
+}
+
+.playerAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all var(--transition-spring);
+}
+
+.playerShiv .playerAvatar {
+    background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.playerVaishnavi .playerAvatar {
+    background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+}
+
+.playerName {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--gray-700);
+}
+
+.playerScore {
+    font-size: var(--text-xs);
+    color: var(--gray-500);
+}
+
+.winning .playerAvatar {
+    transform: scale(1.15);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 12px rgba(244, 114, 182, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 4px 24px rgba(244, 114, 182, 0.5);
+    }
+}
+
+/* Rope Container */
+.ropeContainer {
+    position: relative;
+    height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+/* Background Track */
+.ropeTrack {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+/* Center Line */
+.centerLine {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-400);
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+.centerDot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    background: var(--white);
+    border: 2px solid var(--gray-400);
+    border-radius: var(--radius-full);
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+/* The Rope */
+.rope {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(90deg,
+            #d4a574 0px,
+            #c9956a 4px,
+            #b8845c 8px,
+            #d4a574 12px);
+    border-radius: var(--radius-full);
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+/* Tug Indicator (the knot that moves) */
+.tugIndicator {
+    position: absolute;
+    top: 50%;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    transition: left 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+}
+
+.tugIndicator::before {
+    content: '💕';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.25rem;
+}
+
+.tugIndicator:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* Balance Status */
+.balanceStatus {
+    text-align: center;
+    margin-top: var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-lg);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    transition: all var(--transition-normal);
+}
+
+.balanceStatus.balanced {
+    background: rgba(52, 199, 89, 0.1);
+    color: #34c759;
+}
+
+.balanceStatus.shivOwes {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.balanceStatus.vaishnaviOwes {
+    background: rgba(168, 85, 247, 0.1);
+    color: #a855f7;
+}
+
+/* Hover tooltip */
+.tugIndicator::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: var(--gray-800);
+    color: var(--white);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+    margin-bottom: 4px;
+}
+
+.tugIndicator:hover::after {
+    opacity: 1;
+}
+
+/* Animation on load */
+@keyframes rope-tension {
+    0% {
+        transform: translateY(-50%) scaleX(0.98);
+    }
+
+    50% {
+        transform: translateY(-50%) scaleX(1.02);
+    }
+
+    100% {
+        transform: translateY(-50%) scaleX(1);
+    }
+}
+
+.ropeContainer:hover .rope {
+    animation: rope-tension 0.5s ease-in-out;
+}
+
+/* Shiv Side Fill */
+.shivFill {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border-radius: var(--radius-full) 0 0 var(--radius-full);
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Vaishnavi Side Fill */
+.vaishnaviFill {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.3) 100%);
+    border-radius: 0 var(--radius-full) var(--radius-full) 0;
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
