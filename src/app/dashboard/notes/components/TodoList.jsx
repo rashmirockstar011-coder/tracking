@@ -43,29 +43,8 @@ export default function TodoList({
 
     return (
         <div className={styles.notesContainer}>
-            {/* Quick Add Bar */}
-            <form onSubmit={handleAdd} className={styles.searchBar} style={{ padding: '0' }}>
-                <div className={styles.searchWrapper}>
-                    <span className={styles.searchIcon}><CheckSquare size={18} /></span>
-                    <input
-                        type="text"
-                        className={styles.searchInput}
-                        placeholder="Add a new task..."
-                        value={newItem}
-                        onChange={(e) => setNewItem(e.target.value)}
-                    />
-                    <button
-                        type="submit"
-                        className={styles.addBtnAbs}
-                        disabled={!newItem.trim()}
-                    >
-                        Add
-                    </button>
-                </div>
-            </form>
-
-            {/* Filter Tabs */}
-            <div className={styles.filterBar}>
+            {/* Filter Pills */}
+            <div className={styles.filterBar} style={{ justifyContent: 'center' }}>
                 {['all', 'active', 'completed'].map(f => (
                     <button
                         key={f}
@@ -82,25 +61,25 @@ export default function TodoList({
                 <div className={styles.loadingState}>Loading tasks...</div>
             ) : filteredTodos.length === 0 ? (
                 <div className={styles.emptyState}>
-                    <div className={styles.emptyIcon}>✓</div>
-                    <p className={styles.emptyText}>No {filter} tasks</p>
+                    <div className={styles.emptyIcon}>✨</div>
+                    <p className={styles.emptyText}>All caught up!</p>
                 </div>
             ) : (
-                <div className={styles.dailyItems}> {/* Reuse styling */}
+                <div style={{ paddingBottom: '80px' }}> {/* Space for capsule */}
                     {filteredTodos.map(todo => (
                         <div key={todo.id} className={`${styles.dailyItem} ${todo.completed ? styles.completed : ''}`}>
                             <button
                                 className={styles.itemCheck}
                                 onClick={() => onToggleComplete(todo.id, !todo.completed)}
                             >
-                                {todo.completed && <Check size={14} />}
+                                {todo.completed && <Check size={16} />}
                             </button>
 
                             <div className={styles.itemContent}>
                                 <span>{todo.content}</span>
                                 {todo.targetDate && (
                                     <div className={styles.todoDate}>
-                                        <CalendarIcon size={10} />
+                                        <CalendarIcon size={12} />
                                         {formatDate(todo.targetDate)}
                                     </div>
                                 )}
@@ -110,12 +89,32 @@ export default function TodoList({
                                 className={styles.itemDelete}
                                 onClick={() => onDelete(todo.id)}
                             >
-                                <Trash2 size={14} />
+                                <Trash2 size={16} />
                             </button>
                         </div>
                     ))}
                 </div>
             )}
+
+            {/* Floating Capsule Input */}
+            <div className={styles.capsuleInputContainer}>
+                <form onSubmit={handleAdd} className={styles.capsuleInput}>
+                    <input
+                        type="text"
+                        className={styles.capsuleText}
+                        placeholder="✨ Add a new task..."
+                        value={newItem}
+                        onChange={(e) => setNewItem(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        className={styles.capsuleBtn}
+                        disabled={!newItem.trim()}
+                    >
+                        <CheckSquare size={20} />
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

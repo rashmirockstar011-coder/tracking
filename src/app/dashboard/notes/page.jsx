@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react';
 import styles from '../dashboard.module.css';
 import noteStyles from './notes.module.css';
+import { List, Calendar, Plus, FileText, CheckSquare, Search } from 'lucide-react';
 
 // Components
-import ModeToggle from './components/ModeToggle'; // We'll keep this but maybe rename UI text
 import NotesList from './components/NotesList';
 import CalendarGrid from './components/CalendarGrid';
 import DailyNoteList from './components/DailyNoteList';
@@ -89,7 +89,6 @@ export default function NotesPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ completed })
             });
-            // Optimistic update could go here, but fetchNotes is safer
             fetchNotes();
         } catch (error) {
             console.error('Failed to update item:', error);
@@ -116,8 +115,6 @@ export default function NotesPage() {
     const calendarNotes = displayedNotes; // Calendar shows items of valid type
 
     const dailyListNotes = notes.filter(n => {
-        // Filter by date AND type
-        // Use targetDate if available, else createdAt
         const noteDate = n.targetDate || (n.createdAt ? n.createdAt.split('T')[0] : '');
         const typeMatch = activeTab === 'notes' ? (n.type === 'note' || !n.type) : n.type === 'todo';
         return noteDate === selectedDate && typeMatch;
@@ -129,54 +126,50 @@ export default function NotesPage() {
             <div className={noteStyles.pageHeader}>
                 <h1 className={noteStyles.pageTitle}>Memory Lane 🌸</h1>
 
-                {/* Add New Button (Top Right) */}
+                {/* Add New Button */}
                 <button
                     className={noteStyles.submitBtn}
-                    style={{
-                        width: 'auto',
-                        padding: '0.5rem 1rem',
-                        fontSize: '0.9rem',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}
                     onClick={() => {
                         setEditingNote(null);
                         setShowCreateModal(true);
                     }}
                 >
-                    + New {activeTab === 'notes' ? 'Note' : 'Task'}
+                    <Plus size={16} /> New {activeTab === 'notes' ? 'Note' : 'Task'}
                 </button>
             </div>
 
-            {/* Main Tabs (Segmented Control) */}
+            {/* Segmented Control (Tabs) */}
             <div className={noteStyles.tabContainer}>
                 <button
                     className={`${noteStyles.tabBtn} ${activeTab === 'notes' ? noteStyles.active : ''}`}
                     onClick={() => { setActiveTab('notes'); setViewMode('list'); }}
                 >
-                    📝 Notes
+                    Notes
                 </button>
                 <button
                     className={`${noteStyles.tabBtn} ${activeTab === 'todos' ? noteStyles.active : ''}`}
                     onClick={() => { setActiveTab('todos'); setViewMode('list'); }}
                 >
-                    ✅ To-Dos
+                    To-Dos
                 </button>
             </div>
 
-            {/* View Toggle (List vs Calendar) */}
+            {/* View Toggle (Top Right) */}
             <div className={noteStyles.viewToggleContainer}>
                 <div className={noteStyles.viewToggle}>
                     <button
                         className={`${noteStyles.viewBtn} ${viewMode === 'list' ? noteStyles.active : ''}`}
                         onClick={() => setViewMode('list')}
+                        title="List View"
                     >
-                        List View
+                        <List size={18} />
                     </button>
                     <button
                         className={`${noteStyles.viewBtn} ${viewMode === 'calendar' ? noteStyles.active : ''}`}
                         onClick={() => setViewMode('calendar')}
+                        title="Calendar View"
                     >
-                        Calendar
+                        <Calendar size={18} />
                     </button>
                 </div>
             </div>
@@ -210,7 +203,7 @@ export default function NotesPage() {
                 {viewMode === 'calendar' && (
                     <div className={noteStyles.rewindContainer}>
                         <CalendarGrid
-                            notes={calendarNotes} // Filters by type already
+                            notes={calendarNotes}
                             onDateClick={setSelectedDate}
                             selectedDate={selectedDate}
                         />
