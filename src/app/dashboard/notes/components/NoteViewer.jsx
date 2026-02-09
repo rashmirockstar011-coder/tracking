@@ -88,9 +88,7 @@ export default function NoteViewer({ notes, dateKey, onClose }) {
                         {notes.map((_, idx) => (
                             <div
                                 key={idx}
-                                className={`${styles.progressBar} 
-                                    ${idx < currentIndex ? styles.viewed : ''} 
-                                    ${idx === currentIndex ? styles.active : ''}`}
+                                className={`${styles.progressBar} ${idx < currentIndex ? styles.viewed : ''} ${idx === currentIndex ? styles.active : ''}`}
                             />
                         ))}
                     </div>
