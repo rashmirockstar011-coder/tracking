@@ -16,14 +16,14 @@
 .headerContent {
     max-width: 64rem;
     margin: 0 auto;
-    padding: var(--space-md);
+    padding: var(--container-padding);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .logo {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
     font-weight: 700;
     text-decoration: none;
     color: var(--pink-500);
@@ -38,14 +38,22 @@
 .greeting {
     font-weight: 500;
     color: var(--gray-600);
+    font-size: var(--text-sm);
+}
+
+@media (max-width: 640px) {
+    .greeting {
+        display: none;
+        /* Hide greeting text on mobile to save space */
+    }
 }
 
 .main {
     flex: 1;
     max-width: 64rem;
     margin: 0 auto;
-    padding: var(--space-md);
-    padding-bottom: 6rem;
+    padding: var(--container-padding);
+    padding-bottom: calc(var(--bottom-nav-height) + 1rem);
     width: 100%;
 }
 
@@ -283,8 +291,14 @@
 .statsGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
+    gap: var(--space-md);
     margin-bottom: var(--space-2xl);
+}
+
+@media (max-width: 640px) {
+    .statsGrid {
+        gap: var(--space-sm);
+    }
 }
 
 .statCard {
@@ -292,15 +306,24 @@
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
     box-shadow: var(--shadow-md);
     border: 0.5px solid rgba(255, 255, 255, 0.6);
     transition: all var(--transition-spring);
     position: relative;
     overflow: hidden;
+    min-height: 100px;
+}
+
+@media (max-width: 640px) {
+    .statCard {
+        padding: var(--space-md);
+        gap: var(--space-sm);
+        min-height: 90px;
+    }
 }
 
 .statCard::before {
@@ -324,14 +347,21 @@
 }
 
 .statIconWrapper {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     transition: transform var(--transition-spring);
+}
+
+@media (max-width: 640px) {
+    .statIconWrapper {
+        width: 40px;
+        height: 40px;
+    }
 }
 
 .statCard:hover .statIconWrapper {
@@ -460,14 +490,20 @@
 .navGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
+    gap: var(--space-md);
+}
+
+@media (max-width: 640px) {
+    .navGrid {
+        gap: var(--space-sm);
+    }
 }
 
 .navCard {
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: saturate(180%) blur(20px);
     border-radius: var(--radius-xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -476,6 +512,14 @@
     box-shadow: var(--shadow-md);
     border: 0.5px solid rgba(255, 255, 255, 0.6);
     transition: all var(--transition-spring);
+    min-height: 140px;
+}
+
+@media (max-width: 640px) {
+    .navCard {
+        padding: var(--space-md);
+        min-height: 120px;
+    }
 }
 
 .navCard:hover {
