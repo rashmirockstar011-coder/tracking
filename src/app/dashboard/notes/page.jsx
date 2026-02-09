@@ -138,24 +138,25 @@ export default function NotesPage() {
                 </button>
             </div>
 
-            {/* Segmented Control (Tabs) */}
-            <div className={noteStyles.tabContainer}>
-                <button
-                    className={`${noteStyles.tabBtn} ${activeTab === 'notes' ? noteStyles.active : ''}`}
-                    onClick={() => { setActiveTab('notes'); setViewMode('list'); }}
-                >
-                    Notes
-                </button>
-                <button
-                    className={`${noteStyles.tabBtn} ${activeTab === 'todos' ? noteStyles.active : ''}`}
-                    onClick={() => { setActiveTab('todos'); setViewMode('list'); }}
-                >
-                    To-Dos
-                </button>
-            </div>
+            {/* Toolbar: Tabs + View Toggle */}
+            <div className={noteStyles.toolbar}>
+                {/* Segmented Control (Tabs) */}
+                <div className={noteStyles.tabContainer}>
+                    <button
+                        className={`${noteStyles.tabBtn} ${activeTab === 'notes' ? noteStyles.active : ''}`}
+                        onClick={() => { setActiveTab('notes'); setViewMode('list'); }}
+                    >
+                        Notes
+                    </button>
+                    <button
+                        className={`${noteStyles.tabBtn} ${activeTab === 'todos' ? noteStyles.active : ''}`}
+                        onClick={() => { setActiveTab('todos'); setViewMode('list'); }}
+                    >
+                        To-Dos
+                    </button>
+                </div>
 
-            {/* View Toggle (Top Right) */}
-            <div className={noteStyles.viewToggleContainer}>
+                {/* View Toggle */}
                 <div className={noteStyles.viewToggle}>
                     <button
                         className={`${noteStyles.viewBtn} ${viewMode === 'list' ? noteStyles.active : ''}`}

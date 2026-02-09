@@ -61,6 +61,16 @@
     transform: scale(0.95);
 }
 
+/* Toolbar */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    gap: var(--space-md);
+    flex-wrap: wrap;
+}
+
 /* Segmented Control (Tabs) */
 .tabContainer {
     display: flex;
@@ -68,11 +78,8 @@
     padding: 4px;
     border-radius: 99px;
     /* Pill shape */
-    margin-bottom: var(--space-lg);
     position: relative;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+    /* Removed margins as toolbar handles spacing */
 }
 
 .tabBtn {
