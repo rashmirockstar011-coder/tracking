@@ -134,39 +134,14 @@ export default function NotesPage() {
             <div className={styles.mainContent}>
                 {mode === 'notes' ? (
                     <>
-                        {/* Search & Filter */}
-                        <div className={styles.searchBar}>
-                            <div className={styles.searchWrapper}>
-                                <span className={styles.searchIcon}>🔍</span>
-                                <input
-                                    type="text"
-                                    className={styles.searchInput}
-                                    placeholder="Search memories..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Filter Tags */}
-                        <div className={styles.filterBar}>
-                            {['all', 'memory', 'idea', 'todo', 'dream'].map(tag => (
-                                <button
-                                    key={tag}
-                                    className={`${styles.filterBtn} ${filterTag === tag ? styles.active : ''}`}
-                                    onClick={() => setFilterTag(tag)}
-                                >
-                                    {tag.charAt(0).toUpperCase() + tag.slice(1)}
-                                </button>
-                            ))}
-                        </div>
-
                         {/* Notes List */}
                         <NotesList
                             notes={notes}
                             loading={loading}
                             searchQuery={searchQuery}
+                            onSearchChange={setSearchQuery}
                             filterTag={filterTag}
+                            onFilterChange={setFilterTag}
                             onNoteClick={handleNoteClick}
                             onDeleteNote={handleDeleteNote}
                         />
