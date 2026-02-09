@@ -2,14 +2,15 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Home, Heart, Bell, Wallet, FileText, LogOut } from 'lucide-react';
 import styles from './dashboard.module.css';
 
 const NAV_ITEMS = [
-    { href: '/dashboard', label: 'Home', icon: '🏠' },
-    { href: '/dashboard/promises', label: 'Promises', icon: '🤝' },
-    { href: '/dashboard/reminders', label: 'Reminders', icon: '⏰' },
-    { href: '/dashboard/credits', label: 'Credits', icon: '💝' },
-    { href: '/dashboard/notes', label: 'Notes', icon: '📝' },
+    { href: '/dashboard', label: 'Home', icon: Home },
+    { href: '/dashboard/promises', label: 'Promises', icon: Heart },
+    { href: '/dashboard/reminders', label: 'Reminders', icon: Bell },
+    { href: '/dashboard/credits', label: 'Credits', icon: Wallet },
+    { href: '/dashboard/notes', label: 'Notes', icon: FileText },
 ];
 
 export default function DashboardLayout({ children, user }) {
@@ -34,29 +35,36 @@ export default function DashboardLayout({ children, user }) {
                     <div className={styles.userInfo}>
                         <span className={styles.greeting}>Hi, {user.name}! {userEmoji}</span>
                         <button onClick={handleLogout} className="btn btn-ghost btn-icon" title="Logout">
-                            👋
+                            <LogOut size={18} strokeWidth={2} />
                         </button>
                     </div>
                 </div>
             </header>
 
             {/* Main Content */}
-            <main className={styles.main}>
+            <main className={`${styles.main} page-enter`}>
                 {children}
             </main>
 
             {/* Bottom Navigation */}
             <nav className="bottom-nav">
-                {NAV_ITEMS.map((item) => (
-                    <Link
-                        key={item.href}
-                        href={item.href}
-                        className={`nav-item ${pathname === item.href ? 'active' : ''}`}
-                    >
-                        <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
-                        <span>{item.label}</span>
-                    </Link>
-                ))}
+                {NAV_ITEMS.map((item) => {
+                    const Icon = item.icon;
+                    const isActive = pathname === item.href;
+                    return (
+                        <Link
+                            key={item.href}
+                            href={item.href}
+                            className={`nav-item ${isActive ? 'active' : ''}`}
+                        >
+                            <Icon
+                                size={22}
+                                strokeWidth={isActive ? 2.5 : 1.5}
+                            />
+                            <span>{item.label}</span>
+                        </Link>
+                    );
+                })}
             </nav>
         </div>
     );
