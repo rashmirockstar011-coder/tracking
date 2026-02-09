@@ -23,6 +23,7 @@
     -webkit-backdrop-filter: blur(12px);
     padding: var(--space-md) 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    will-change: transform;
 }
 
 .pageTitle {
@@ -34,30 +35,35 @@
     font-family: var(--font-accent);
 }
 
-/* Premium Button */
+/* Premium Button - NUCLEAR OPTION */
 .submitBtn {
-    background: var(--gray-900);
-    color: white;
-    border: none;
+    background: #000000 !important;
+    /* Force Black */
+    color: #ffffff !important;
+    /* Force White */
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
     padding: 0.6rem 1.2rem;
-    border-radius: var(--radius-full);
-    font-weight: 600;
+    border-radius: 999px !important;
+    font-weight: 700 !important;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: all var(--transition-spring);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
     display: flex;
     align-items: center;
     gap: 6px;
     opacity: 1 !important;
     /* Force visibility */
-    z-index: 50;
+    visibility: visible !important;
+    z-index: 100 !important;
+    pointer-events: auto !important;
 }
 
 .submitBtn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    background: black;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3) !important;
+    background: #000000 !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .submitBtn:active {
@@ -72,6 +78,8 @@
     margin-bottom: var(--space-lg);
     gap: var(--space-md);
     flex-wrap: wrap;
+    position: relative;
+    z-index: 5;
 }
 
 /* Segmented Control (Tabs) */
@@ -105,48 +113,53 @@
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
 }
 
-/* View Toggle (Top Right) */
+/* View Toggle (Top Right) - NUCLEAR OPTION */
 .viewToggleContainer {
     display: flex;
     justify-content: flex-end;
-    /* Removed negative margin */
     margin-bottom: var(--space-lg);
+    position: relative;
+    z-index: 5;
 }
 
 .viewToggle {
     display: flex;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
     padding: 3px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
 }
 
 .viewBtn {
     padding: 8px 12px;
     font-size: 1rem;
     border: none;
-    background: var(--gray-50);
-    /* Subtle background */
-    color: var(--gray-600);
-    /* Darker default icon */
-    border-radius: var(--radius-md);
+    background: #f3f4f6 !important;
+    /* Force Gray-100 */
+    color: #4b5563 !important;
+    /* Force Gray-600 */
+    border-radius: 8px !important;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 1 !important;
 }
 
 .viewBtn:hover {
-    color: var(--gray-900);
-    background: var(--gray-200);
+    color: #111827 !important;
+    /* Gray-900 */
+    background: #e5e7eb !important;
+    /* Gray-200 */
 }
 
 .viewBtn.active {
-    background: var(--gray-900);
-    color: white;
-    box-shadow: var(--shadow-sm);
+    background: #111827 !important;
+    /* Gray-900 */
+    color: #ffffff !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Content Area */
@@ -438,23 +451,6 @@
     font-size: 0.75rem;
     color: var(--gray-400);
     margin-top: 4px;
-}
-
-/* Header */
-.pageHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--space-md);
-    position: sticky;
-    top: 0;
-    z-index: 40;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    padding: var(--space-md) 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-    will-change: transform;
 }
 
 /* Capsule Input for Tasks */
