@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Bell, Calendar as CalendarIcon, List, X } from 'lucide-react';
 import styles from '../dashboard.module.css';
+import reminderStyles from './reminders.module.css';
+import ReminderCalendar from './ReminderCalendar';
 
 export default function RemindersPage() {
     const [reminders, setReminders] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
     const [formData, setFormData] = useState({
         title: '',
         datetime: '',
@@ -88,18 +92,41 @@ export default function RemindersPage() {
         <div className={styles.pageContainer}>
             {/* Header */}
             <div className={styles.pageHeader}>
-                <h1 className={styles.pageTitle}>⏰ Reminders</h1>
+                <h1 className={styles.pageTitle}>
+                    <Bell size={32} strokeWidth={2} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '8px' }} />
+                    Reminders
+                </h1>
                 <button className="btn btn-primary" onClick={() => setShowModal(true)}>
                     + New Reminder
                 </button>
             </div>
 
-            {/* Reminders List */}
+            {/* View Toggle */}
+            <div className={reminderStyles.viewToggle}>
+                <button
+                    className={`${reminderStyles.viewToggleBtn} ${viewMode === 'list' ? reminderStyles.active : ''}`}
+                    onClick={() => setViewMode('list')}
+                >
+                    <List size={16} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                    List
+                </button>
+                <button
+                    className={`${reminderStyles.viewToggleBtn} ${viewMode === 'calendar' ? reminderStyles.active : ''}`}
+                    onClick={() => setViewMode('calendar')}
+                >
+                    <CalendarIcon size={16} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
+                    Calendar
+                </button>
+            </div>
+
+            {/* Content */}
             {loading ? (
                 <div className="empty-state">
                     <div className="empty-state-icon">💫</div>
                     <p>Loading reminders...</p>
                 </div>
+            ) : viewMode === 'calendar' ? (
+                <ReminderCalendar reminders={reminders} />
             ) : reminders.length === 0 ? (
                 <div className="empty-state">
                     <div className="empty-state-icon">⏰</div>
@@ -166,7 +193,7 @@ export default function RemindersPage() {
                         <div className="modal-header">
                             <h2>Add Reminder 📅</h2>
                             <button className="btn btn-ghost btn-icon" onClick={() => setShowModal(false)}>
-                                ✕
+                                <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleSubmit}>

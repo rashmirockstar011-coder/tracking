@@ -1,9 +1,12 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import styles from './credits.module.css';
+import { triggerHeartRain } from '@/lib/celebrations';
 
 export default function TugOfWar({ credits }) {
+    const hasTriggeredRef = useRef(false);
+
     // Calculate balance: positive = Shiv owes more, negative = Vaishnavi owes more
     const balance = useMemo(() => {
         const pendingCredits = credits.filter(c => c.status === 'pending');
@@ -17,6 +20,16 @@ export default function TugOfWar({ credits }) {
             total: shivOwes + vaishnaviOwes
         };
     }, [credits]);
+
+    // Trigger heart rain when balance reaches zero
+    useEffect(() => {
+        if (balance.total === 0 && credits.length > 0 && !hasTriggeredRef.current) {
+            triggerHeartRain();
+            hasTriggeredRef.current = true;
+        } else if (balance.total > 0) {
+            hasTriggeredRef.current = false;
+        }
+    }, [balance.total, credits.length]);
 
     // Calculate position (0-100, 50 is center)
     // If Shiv owes more, knot moves toward Vaishnavi (right)

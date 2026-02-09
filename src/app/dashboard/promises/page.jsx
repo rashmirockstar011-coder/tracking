@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Heart, Calendar, Trash2, Check, X } from 'lucide-react';
 import styles from '../dashboard.module.css';
+import promiseStyles from './promises.module.css';
+import { triggerConfetti } from '@/lib/celebrations';
 
 const STATUS_FILTERS = ['all', 'pending', 'fulfilled', 'broken'];
 const STATUS_ICONS = {
@@ -15,6 +18,7 @@ export default function PromisesPage() {
     const [filter, setFilter] = useState('all');
     const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [flippedCards, setFlippedCards] = useState(new Set());
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -64,6 +68,12 @@ export default function PromisesPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status })
             });
+
+            // Trigger confetti when promise is fulfilled
+            if (status === 'fulfilled') {
+                triggerConfetti();
+            }
+
             fetchPromises();
         } catch (error) {
             console.error('Failed to update promise:', error);
@@ -80,6 +90,18 @@ export default function PromisesPage() {
         }
     };
 
+    const toggleFlip = (id) => {
+        setFlippedCards(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(id)) {
+                newSet.delete(id);
+            } else {
+                newSet.add(id);
+            }
+            return newSet;
+        });
+    };
+
     const filteredPromises = filter === 'all'
         ? promises
         : promises.filter(p => p.status === filter);
@@ -88,7 +110,10 @@ export default function PromisesPage() {
         <div className={styles.pageContainer}>
             {/* Header */}
             <div className={styles.pageHeader}>
-                <h1 className={styles.pageTitle}>🤝 Promises</h1>
+                <h1 className={styles.pageTitle}>
+                    <Heart size={32} strokeWidth={2} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '8px' }} />
+                    Promises
+                </h1>
                 <button className="btn btn-primary" onClick={() => setShowModal(true)}>
                     + New Promise
                 </button>
@@ -107,7 +132,7 @@ export default function PromisesPage() {
                 ))}
             </div>
 
-            {/* Promises List */}
+            {/* Promises Grid */}
             {loading ? (
                 <div className="empty-state">
                     <div className="empty-state-icon">💫</div>
@@ -119,53 +144,78 @@ export default function PromisesPage() {
                     <p>No promises yet. Make one to each other!</p>
                 </div>
             ) : (
-                <div className={styles.itemList}>
+                <div className={promiseStyles.promiseGrid}>
                     {filteredPromises.map((promise) => (
-                        <div key={promise.id} className={styles.listItem}>
-                            <span className={styles.listItemIcon}>{STATUS_ICONS[promise.status]}</span>
-                            <div className={styles.listItemContent}>
-                                <h3 className={styles.listItemTitle}>{promise.title}</h3>
-                                {promise.description && (
-                                    <p style={{ fontSize: '0.875rem', color: 'var(--gray-600)', marginBottom: 'var(--space-xs)' }}>
-                                        {promise.description}
-                                    </p>
-                                )}
-                                <div className={styles.listItemMeta}>
-                                    <span className={`tag ${promise.status === 'fulfilled' ? 'tag-success' : promise.status === 'broken' ? 'tag-error' : 'tag-warning'}`}>
-                                        {promise.status}
-                                    </span>
-                                    {promise.dueDate && (
-                                        <span>📅 {new Date(promise.dueDate).toLocaleDateString()}</span>
+                        <div
+                            key={promise.id}
+                            className={`${promiseStyles.promiseCard} ${flippedCards.has(promise.id) ? promiseStyles.flipped : ''}`}
+                            onClick={() => toggleFlip(promise.id)}
+                        >
+                            <div className={promiseStyles.promiseCardInner}>
+                                {/* Front of Card */}
+                                <div className={promiseStyles.promiseCardFront}>
+                                    <div className={promiseStyles.promiseCardTitle}>{promise.title}</div>
+                                    {promise.description && (
+                                        <div className={promiseStyles.promiseCardDescription}>
+                                            {promise.description}
+                                        </div>
                                     )}
-                                    <span>by {promise.createdBy === 'shiv' ? '💙 Shiv' : '💜 Vaishnavi'}</span>
+                                    <div className={promiseStyles.promiseCardFooter}>
+                                        <div className={promiseStyles.promiseCardMeta}>
+                                            {promise.createdBy === 'shiv' ? '💙 Shiv' : '💜 Vaishnavi'}
+                                        </div>
+                                        <div className={promiseStyles.promiseCardStatus}>
+                                            {STATUS_ICONS[promise.status]}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className={styles.listItemActions}>
-                                {promise.status === 'pending' && (
-                                    <>
-                                        <button
-                                            className="btn btn-ghost btn-icon"
-                                            onClick={() => updateStatus(promise.id, 'fulfilled')}
-                                            title="Mark as fulfilled"
-                                        >
-                                            ✅
-                                        </button>
-                                        <button
-                                            className="btn btn-ghost btn-icon"
-                                            onClick={() => updateStatus(promise.id, 'broken')}
-                                            title="Mark as broken"
-                                        >
-                                            💔
-                                        </button>
-                                    </>
-                                )}
-                                <button
-                                    className="btn btn-ghost btn-icon"
-                                    onClick={() => deletePromise(promise.id)}
-                                    title="Delete"
-                                >
-                                    🗑️
-                                </button>
+
+                                {/* Back of Card */}
+                                <div className={promiseStyles.promiseCardBack}>
+                                    <div className={promiseStyles.promiseCardBackContent}>
+                                        <div className={promiseStyles.promiseCardBackStatus}>
+                                            {STATUS_ICONS[promise.status]}
+                                        </div>
+                                        <div className={promiseStyles.promiseCardBackText}>
+                                            {promise.status === 'fulfilled' ? 'Promise Kept!' :
+                                                promise.status === 'broken' ? 'Promise Broken' :
+                                                    'Pending Promise'}
+                                        </div>
+                                        {promise.dueDate && (
+                                            <div className={promiseStyles.promiseCardBackDate}>
+                                                <Calendar size={14} style={{ display: 'inline', marginRight: '4px' }} />
+                                                {new Date(promise.dueDate).toLocaleDateString()}
+                                            </div>
+                                        )}
+                                        <div className={promiseStyles.promiseCardActions} onClick={(e) => e.stopPropagation()}>
+                                            {promise.status === 'pending' && (
+                                                <>
+                                                    <button
+                                                        className="btn btn-ghost btn-icon"
+                                                        onClick={() => updateStatus(promise.id, 'fulfilled')}
+                                                        title="Mark as fulfilled"
+                                                    >
+                                                        <Check size={18} />
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-ghost btn-icon"
+                                                        onClick={() => updateStatus(promise.id, 'broken')}
+                                                        title="Mark as broken"
+                                                    >
+                                                        <X size={18} />
+                                                    </button>
+                                                </>
+                                            )}
+                                            <button
+                                                className="btn btn-ghost btn-icon"
+                                                onClick={() => deletePromise(promise.id)}
+                                                title="Delete"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -179,7 +229,7 @@ export default function PromisesPage() {
                         <div className="modal-header">
                             <h2>Make a Promise 💕</h2>
                             <button className="btn btn-ghost btn-icon" onClick={() => setShowModal(false)}>
-                                ✕
+                                <X size={20} />
                             </button>
                         </div>
                         <form onSubmit={handleSubmit}>
