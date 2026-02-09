@@ -290,13 +290,22 @@
 /* Redesigned Stat Cards */
 .statsGrid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: var(--space-md);
     margin-bottom: var(--space-2xl);
 }
 
+@media (max-width: 1024px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+}
+
 @media (max-width: 640px) {
     .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Keep 2x2 on mobile */
         gap: var(--space-sm);
     }
 }
@@ -309,20 +318,22 @@
     padding: var(--space-lg);
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-sm);
+    /* Tighter gap */
     box-shadow: var(--shadow-md);
     border: 0.5px solid rgba(255, 255, 255, 0.6);
     transition: all var(--transition-spring);
     position: relative;
     overflow: hidden;
-    min-height: 120px;
+    min-height: 140px;
+    /* Slightly taller to breathe */
+    justify-content: space-between;
 }
 
 @media (max-width: 640px) {
     .statCard {
         padding: var(--space-md);
-        gap: var(--space-sm);
-        min-height: 100px;
+        min-height: 110px;
     }
 }
 
@@ -347,8 +358,9 @@
 }
 
 .statIconWrapper {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    /* Slightly smaller for 4-col layout */
+    height: 48px;
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
@@ -360,8 +372,9 @@
 
 @media (max-width: 640px) {
     .statIconWrapper {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-md);
     }
 }
 
