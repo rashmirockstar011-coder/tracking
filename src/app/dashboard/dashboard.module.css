@@ -5,12 +5,14 @@
 }
 
 .header {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--pink-100);
     position: sticky;
     top: 0;
     z-index: 40;
+    will-change: transform;
 }
 
 .headerContent {
@@ -80,12 +82,21 @@
 }
 
 .statCard {
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+    /* Lower blur */
+    -webkit-backdrop-filter: blur(8px);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     text-align: center;
     box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform var(--transition-normal);
+}
+
+.statCard:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .statIcon {

@@ -8,13 +8,31 @@
 
 .loginCard {
   background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: var(--radius-xl);
   padding: var(--space-2xl);
   width: 100%;
   max-width: 24rem;
   box-shadow: var(--shadow-xl);
   text-align: center;
+  will-change: transform;
+}
+
+@media (max-width: 480px) {
+  .loginCard {
+    padding: var(--space-lg);
+    max-width: 100%;
+    margin: 0 var(--space-sm);
+  }
+
+  .logo {
+    font-size: 3rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
 }
 
 .header {
@@ -65,24 +83,31 @@
   gap: var(--space-xs);
   padding: var(--space-md);
   background: var(--white);
-  border: 2px solid var(--pink-200);
+  border: 2px solid var(--pink-100);
+  /* Lighter default border */
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-normal);
   font-family: var(--font-main);
   font-weight: 600;
-  color: var(--gray-600);
+  color: var(--gray-700);
+  /* Darker text */
+  box-shadow: var(--shadow-xs);
 }
 
 .userButton:hover {
-  border-color: var(--pink-400);
+  border-color: var(--pink-300);
   background: var(--pink-50);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .userButton.selected {
   border-color: var(--pink-500);
-  background: var(--gradient-soft);
-  color: var(--pink-600);
+  background: var(--pink-50);
+  /* Use solid color for better contrast vs text */
+  color: var(--pink-700);
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
 }
 
 .userEmoji {

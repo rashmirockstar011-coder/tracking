@@ -431,6 +431,23 @@
     margin-top: 4px;
 }
 
+/* Header */
+.pageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    will-change: transform;
+}
+
 /* Capsule Input for Tasks */
 .capsuleInputContainer {
     position: fixed;
@@ -446,12 +463,13 @@
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     padding: 6px;
     border-radius: 99px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     border: 1px solid rgba(255, 255, 255, 0.5);
+    will-change: transform;
 }
 
 .capsuleText {
@@ -461,7 +479,13 @@
     padding: 12px 20px;
     font-size: 1rem;
     outline: none;
-    color: var(--gray-800);
+    color: var(--gray-900);
+    /* Darker text for visibility */
+    font-weight: 500;
+}
+
+.capsuleText::placeholder {
+    color: var(--gray-500);
 }
 
 .capsuleBtn {
