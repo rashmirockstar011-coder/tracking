@@ -18,11 +18,12 @@ export default function CalendarGrid({ notes, onDateClick, selectedDate }) {
     const notesByDate = useMemo(() => {
         const grouped = {};
         notes.forEach(note => {
-            if (note.createdAt) {
-                const date = new Date(note.createdAt);
-                const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                if (!grouped[key]) grouped[key] = [];
-                grouped[key].push(note);
+            // Prioritize targetDate, fallback to createdAt
+            const dateStr = note.targetDate || (note.createdAt ? note.createdAt.split('T')[0] : null);
+
+            if (dateStr) {
+                if (!grouped[dateStr]) grouped[dateStr] = [];
+                grouped[dateStr].push(note);
             }
         });
         return grouped;

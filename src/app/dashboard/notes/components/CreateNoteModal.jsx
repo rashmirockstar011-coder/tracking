@@ -15,12 +15,14 @@ const TAG_COLORS = {
     todo: { bg: '#fef3c7', color: '#d97706' },
 };
 
-export default function CreateNoteModal({ onClose, onSave, editingNote }) {
+export default function CreateNoteModal({ onClose, onSave, editingNote, defaultType = 'note' }) {
     const [title, setTitle] = useState(editingNote?.title || '');
     const [content, setContent] = useState(editingNote?.content || '');
     const [selectedEmoji, setSelectedEmoji] = useState(editingNote?.emoji || null);
     const [selectedTags, setSelectedTags] = useState(editingNote?.tags || []);
     const [saving, setSaving] = useState(false);
+
+    const isTodo = (editingNote?.type || defaultType) === 'todo';
 
     const toggleTag = (tag) => {
         setSelectedTags(prev =>
@@ -40,7 +42,8 @@ export default function CreateNoteModal({ onClose, onSave, editingNote }) {
                 title: title.trim(),
                 content: content.trim(),
                 emoji: selectedEmoji,
-                tags: selectedTags
+                tags: selectedTags,
+                type: editingNote?.type || defaultType
             });
             onClose();
         } catch (error) {
@@ -56,7 +59,7 @@ export default function CreateNoteModal({ onClose, onSave, editingNote }) {
                 {/* Header */}
                 <div className={styles.modalHeader}>
                     <h2 className={styles.modalTitle}>
-                        {editingNote ? '✏️ Edit Note' : '💝 New Memory'}
+                        {editingNote ? '✏️ Edit ' + (isTodo ? 'Task' : 'Memory') : (isTodo ? '✅ New Task' : '💝 New Memory')}
                     </h2>
                     <button className={styles.closeBtn} onClick={onClose}>
                         ✕
@@ -71,7 +74,7 @@ export default function CreateNoteModal({ onClose, onSave, editingNote }) {
                         <input
                             type="text"
                             className={styles.formInput}
-                            placeholder="A moment to remember..."
+                            placeholder={isTodo ? "Task Name" : "A moment to remember..."}
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             required
@@ -80,17 +83,17 @@ export default function CreateNoteModal({ onClose, onSave, editingNote }) {
 
                     {/* Content */}
                     <div className={styles.formGroup}>
-                        <label className={styles.formLabel}>Your thoughts</label>
+                        <label className={styles.formLabel}>{isTodo ? 'Details' : 'Your thoughts'}</label>
                         <textarea
                             className={`${styles.formInput} ${styles.formTextarea}`}
-                            placeholder="Write what's on your heart..."
+                            placeholder={isTodo ? "What requires your attention?" : "Write what's on your heart..."}
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             required
                         />
                     </div>
 
-                    {/* Emoji Picker */}
+                    {/* Emoji Picker - Only for Notes? Or both? Keep for both for fun */}
                     <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Mood (optional)</label>
                         <div className={styles.emojiPicker}>
@@ -135,7 +138,7 @@ export default function CreateNoteModal({ onClose, onSave, editingNote }) {
                         className={styles.submitBtn}
                         disabled={saving || !title.trim() || !content.trim()}
                     >
-                        {saving ? '💫 Saving...' : (editingNote ? '💖 Save Changes' : '💖 Create Memory')}
+                        {saving ? '💫 Saving...' : (editingNote ? '💖 Save Changes' : (isTodo ? '✅ Add Task' : '💖 Create Memory'))}
                     </button>
                 </form>
             </div>

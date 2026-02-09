@@ -25,7 +25,8 @@ export async function GET() {
             id: doc.id,
             ...doc.data(),
             createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || null,
-            updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || null
+            updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || null,
+            targetDate: doc.data().targetDate || null // Ensure targetDate is returned
         }));
 
         return NextResponse.json(notes);
@@ -43,16 +44,19 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { title, content, tags } = await request.json();
+        const { title, content, tags, type, targetDate, completed } = await request.json();
 
-        if (!title || !content) {
-            return NextResponse.json({ error: 'Title and content are required' }, { status: 400 });
+        if (!content) {
+            return NextResponse.json({ error: 'Content is required' }, { status: 400 });
         }
 
         const noteData = {
-            title,
+            title: title || 'Untitled', // Title optional for quick to-dos
             content,
             tags: tags || [],
+            type: type || 'note', // 'note' or 'todo'
+            targetDate: targetDate || null, // YYYY-MM-DD string for calendar items
+            completed: completed || false,
             createdBy: user.userId,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { Plus, Check, Trash2, FileText, CheckSquare } from 'lucide-react';
 import styles from '../notes.module.css';
 
-export default function DailyNoteList({ date, notes, onAddNote, onDeleteNote, onToggleComplete }) {
-    const [newItemType, setNewItemType] = useState('text'); // 'text' or 'todo'
+export default function DailyNoteList({ date, notes, onAddNote, onDeleteNote, onToggleComplete, forcedType }) {
+    const [newItemType, setNewItemType] = useState(forcedType || 'note'); // 'note' or 'todo'
     const [newItemContent, setNewItemContent] = useState('');
     const [isAdding, setIsAdding] = useState(false);
 
@@ -21,7 +21,7 @@ export default function DailyNoteList({ date, notes, onAddNote, onDeleteNote, on
 
         onAddNote({
             content: newItemContent,
-            type: newItemType,
+            type: forcedType || newItemType,
             date: date,
             completed: false
         });
@@ -58,7 +58,7 @@ export default function DailyNoteList({ date, notes, onAddNote, onDeleteNote, on
                                 {note.type === 'todo' && (
                                     note.completed ? <Check size={14} /> : null
                                 )}
-                                {note.type === 'text' && <div className={styles.textDot} />}
+                                {(note.type === 'note' || note.type === 'text') && <div className={styles.textDot} />}
                             </button>
 
                             <span className={styles.itemContent}>{note.content}</span>
@@ -76,22 +76,24 @@ export default function DailyNoteList({ date, notes, onAddNote, onDeleteNote, on
 
             {isAdding ? (
                 <form onSubmit={handleAdd} className={styles.addItemForm}>
-                    <div className={styles.typeToggle}>
-                        <button
-                            type="button"
-                            className={`${styles.typeBtn} ${newItemType === 'text' ? styles.active : ''}`}
-                            onClick={() => setNewItemType('text')}
-                        >
-                            <FileText size={14} /> Note
-                        </button>
-                        <button
-                            type="button"
-                            className={`${styles.typeBtn} ${newItemType === 'todo' ? styles.active : ''}`}
-                            onClick={() => setNewItemType('todo')}
-                        >
-                            <CheckSquare size={14} /> To-Do
-                        </button>
-                    </div>
+                    {!forcedType && (
+                        <div className={styles.typeToggle}>
+                            <button
+                                type="button"
+                                className={`${styles.typeBtn} ${newItemType === 'note' ? styles.active : ''}`}
+                                onClick={() => setNewItemType('note')}
+                            >
+                                <FileText size={14} /> Note
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.typeBtn} ${newItemType === 'todo' ? styles.active : ''}`}
+                                onClick={() => setNewItemType('todo')}
+                            >
+                                <CheckSquare size={14} /> To-Do
+                            </button>
+                        </div>
+                    )}
                     <input
                         type="text"
                         className={styles.addItemInput}

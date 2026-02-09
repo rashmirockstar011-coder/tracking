@@ -23,7 +23,7 @@ export async function PATCH(request, { params }) {
         }
 
         const { id } = await params;
-        const { title, content, tags } = await request.json();
+        const { title, content, tags, type, targetDate, completed } = await request.json();
 
         const updates = {
             updatedAt: serverTimestamp()
@@ -32,6 +32,9 @@ export async function PATCH(request, { params }) {
         if (title !== undefined) updates.title = title;
         if (content !== undefined) updates.content = content;
         if (tags !== undefined) updates.tags = tags;
+        if (type !== undefined) updates.type = type;
+        if (targetDate !== undefined) updates.targetDate = targetDate;
+        if (completed !== undefined) updates.completed = completed;
 
         const docRef = doc(db, 'notes', id);
         await updateDoc(docRef, updates);
